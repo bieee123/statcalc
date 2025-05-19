@@ -1,7 +1,7 @@
 // Fungsi untuk menambahkan header dan footer
 document.addEventListener('DOMContentLoaded', function() {
     // Memuat header
-    fetch('/components/header-file.html')
+    fetch('components/header-file.html')
         .then(response => response.text())
         .then(data => {
             document.querySelector('header').innerHTML = data;
@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
         .catch(error => console.error('Error loading header:', error));
 
     // Memuat footer
-    fetch('/components/footer-file.html')
+    fetch('components/footer-file.html')
         .then(response => response.text())
         .then(data => {
             document.querySelector('footer').innerHTML = data;
