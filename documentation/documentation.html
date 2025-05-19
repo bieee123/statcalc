@@ -3,428 +3,560 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentation - Statistical & Probability Calculator</title>
-    <link rel="stylesheet" href="/documentation/documentation.css">
-    <link rel="stylesheet" href="/components/styles-file.css">
+    <title>Inferential Statistics Calculator | StatCalc</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="inference/inference.css">
+    <link rel="stylesheet" href="components/styles-file.css">
 </head>
 <body>
-    <!-- Header -->
     <header></header>
 
-    <!-- Main Content -->
-    <main class="documentation">
+    <section class="page-header">
         <div class="container">
-            <div class="doc-header">
-                <h1>Web-Based Statistical and Probability Calculator</h1>
-                <p>Complete documentation on using the StatCalc application for statistical analysis and probability calculations</p>
+            <h1>Inferential Statistics Calculator</h1>
+            <p>Perform statistical inference tests with step-by-step explanations and visualizations to enhance your understanding of statistical concepts.</p>
+        </div>
+    </section>
+
+    <main class="container mb-5">
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="test-card">
+                    <div class="test-card-header">
+                        <h3>Statistical Test Selection</h3>
+                    </div>
+                    <div class="test-card-body">
+                        <div class="form-group">
+                            <label for="testType" class="form-label">Select Test Type:</label>
+                            <select id="testType" class="form-select">
+                                <option value="ci-z">Confidence Interval Estimation (Z-test)</option>
+                                <option value="ci-t">Confidence Interval Estimation (T-test)</option>
+                                <option value="one-sample">One-Sample Hypothesis Test</option>
+                                <option value="two-sample">Two-Sample Hypothesis Test</option>
+                                <option value="chi-square">Chi-Square Test for Independence</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Dynamic Test Forms Will Be Loaded Here -->
+                        <div id="dynamicFormContainer">
+                            <!-- Z-Test Confidence Interval Form (Default) -->
+                            <div id="ci-z-form">
+                                <h4 class="mb-3">Z-Test Confidence Interval</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="z-sample-mean" class="form-label">
+                                                <div class="input-with-tooltip">
+                                                    Sample Mean (x̄)
+                                                    <span class="info-tooltip" data-bs-toggle="tooltip" title="Average value of the sample data">
+                                                        <i class="bi bi-info-circle"></i>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <input type="number" step="any" id="z-sample-mean" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="z-pop-std" class="form-label">
+                                                <div class="input-with-tooltip">
+                                                    Population Standard Deviation (σ)
+                                                    <span class="info-tooltip" data-bs-toggle="tooltip" title="Known standard deviation of the population">
+                                                        <i class="bi bi-info-circle"></i>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <input type="number" step="any" min="0" id="z-pop-std" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="z-sample-size" class="form-label">
+                                                <div class="input-with-tooltip">
+                                                    Sample Size (n)
+                                                    <span class="info-tooltip" data-bs-toggle="tooltip" title="Number of observations in the sample">
+                                                        <i class="bi bi-info-circle"></i>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <input type="number" min="1" id="z-sample-size" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="z-confidence" class="form-label">
+                                                <div class="input-with-tooltip">
+                                                    Confidence Level (%)
+                                                    <span class="info-tooltip" data-bs-toggle="tooltip" title="Level of confidence for the interval (common values: 90%, 95%, 99%)">
+                                                        <i class="bi bi-info-circle"></i>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <select id="z-confidence" class="form-select" required>
+                                                <option value="0.90">90%</option>
+                                                <option value="0.95" selected>95%</option>
+                                                <option value="0.99">99%</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <button type="button" id="calculate-z-ci" class="btn btn-primary">Calculate Confidence Interval</button>
+                                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('ci-z')">Reset</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Other test forms will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div id="results-container" class="test-card" style="display: none;">
+                    <div class="test-card-header">
+                        <h3>Results</h3>
+                    </div>
+                    <div class="test-card-body">
+                        <div id="results-content">
+                            <!-- Results will be displayed here -->
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="resultsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Application Description -->
-            <section class="doc-section" id="app-description">
-                <h2>Application Description</h2>
-                <p>The Web-Based Statistical and Probability Calculator is an educational tool designed to assist computer science students in understanding and performing statistical and probability calculations. Whether you're working on data analysis, machine learning projects, or simply studying for exams, this application provides a comprehensive set of tools to help you succeed.</p>
-                
-                <h3>Purpose</h3>
-                <p>This application aims to:</p>
-                <ul>
-                    <li>Simplify complex statistical calculations for computer science students</li>
-                    <li>Provide intuitive visualization of statistical concepts</li>
-                    <li>Serve as a learning aid for understanding probability distributions</li>
-                    <li>Support data-driven decision making in programming projects</li>
-                </ul>
-
-                <h3>Main Features</h3>
-                <div class="features">
-                    <div class="feature-card">
-                        <div class="feature-icon">📊</div>
-                        <h4>Basic Statistics</h4>
-                        <p>Calculate descriptive statistics including mean, median, mode, standard deviation, variance, range, and more.</p>
+            <div class="col-lg-4">
+                <!-- Educational Panel -->
+                <div class="test-card mb-4">
+                    <div class="simulation-toggle toggle-open">
+                        <h4 class="mb-0">Interactive Learning Panel</h4>
+                        <span class="toggle-icon">▼</span>
                     </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">🎲</div>
-                        <h4>Probability Distributions</h4>
-                        <p>Work with various probability distributions including normal, binomial, Poisson, and uniform distributions.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">⚖️</div>
-                        <h4>Inferential Statistics</h4>
-                        <p>Perform hypothesis testing, confidence intervals, regression analysis, and ANOVA calculations.</p>
-                    </div>
-                    <div class="feature-card">
-                        <div class="feature-icon">📈</div>
-                        <h4>Data Visualization</h4>
-                        <p>Generate histograms, box plots, scatter plots, probability plots, and other visual representations of your data.</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- How to Use -->
-            <section class="doc-section" id="how-to-use">
-                <h2>How to Use the Application</h2>
-                <p>The Statistical and Probability Calculator is designed with a user-friendly interface that guides you through the process of analyzing your data. Follow these general steps to get started:</p>
-
-                <div class="workflow">
-                    <div class="workflow-step">
-                        <h4><span class="step-number">1</span> Enter Your Data</h4>
-                        <p>Input your data in the provided text area. Values should be separated by commas (e.g., 12.5, 13.8, 15.2, 9.4). You can also upload CSV files for larger datasets.</p>
-                    </div>
-                    <div class="workflow-step">
-                        <h4><span class="step-number">2</span> Select Calculation Type</h4>
-                        <p>Choose the type of calculation or analysis you want to perform from the available options in the sidebar or main menu.</p>
-                    </div>
-                    <div class="workflow-step">
-                        <h4><span class="step-number">3</span> Configure Parameters</h4>
-                        <p>Set any required parameters for your selected calculation. The interface will dynamically update to show only relevant options.</p>
-                    </div>
-                    <div class="workflow-step">
-                        <h4><span class="step-number">4</span> Process the Data</h4>
-                        <p>Click the "Calculate" or "Process" button to perform the analysis. Results will appear in the designated output area.</p>
-                    </div>
-                </div>
-
-                <h3>Example Workflow</h3>
-                <p>Let's walk through calculating the mean and standard deviation of a dataset:</p>
-                <ol>
-                    <li>Navigate to the "Basic Statistics" section from the main menu.</li>
-                    <li>Enter your data: <code>85, 90, 75, 80, 95, 88, 72, 79, 84, 91</code> in the input field.</li>
-                    <li>Check the boxes for "Mean" and "Standard Deviation" in the options panel.</li>
-                    <li>Click "Calculate" to process the data.</li>
-                    <li>View your results in the output panel, which will display the mean (83.9) and standard deviation (approximately 7.45) of your dataset.</li>
-                </ol>
-            </section>
-
-            <!-- Feature Explanations -->
-            <section class="doc-section" id="feature-explanations">
-                <h2>Feature Explanations</h2>
-                
-                <h3>Basic Statistics</h3>
-                <p>The Basic Statistics module provides essential descriptive statistics for analyzing your dataset's central tendency, dispersion, and distribution shape.</p>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Statistic</th>
-                            <th>Description</th>
-                            <th>Formula</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Mean</td>
-                            <td>The average value of a dataset</td>
-                            <td class="formula">μ = (1/n) × Σ(x<sub>i</sub>)</td>
-                        </tr>
-                        <tr>
-                            <td>Median</td>
-                            <td>The middle value when data is arranged in order</td>
-                            <td class="formula">Middle value or average of two middle values</td>
-                        </tr>
-                        <tr>
-                            <td>Mode</td>
-                            <td>The most frequently occurring value</td>
-                            <td class="formula">Value with highest frequency</td>
-                        </tr>
-                        <tr>
-                            <td>Standard Deviation</td>
-                            <td>Measure of dispersion relative to the mean</td>
-                            <td class="formula">σ = √[(1/n) × Σ(x<sub>i</sub> - μ)²]</td>
-                        </tr>
-                        <tr>
-                            <td>Variance</td>
-                            <td>Square of the standard deviation</td>
-                            <td class="formula">σ² = (1/n) × Σ(x<sub>i</sub> - μ)²</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="example">
-                    <strong>Example:</strong> For the dataset [10, 12, 15, 18, 20], the calculator provides:
-                    <br>Mean = 15, Median = 15, Mode = None, Standard Deviation ≈ 3.94, Variance ≈ 15.5
-                </div>
-                
-                <h3>Probability Distributions</h3>
-                <p>This module allows you to work with common probability distributions used in computer science applications, including generating probability densities, cumulative distributions, and random samples.</p>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Distribution</th>
-                            <th>Parameters</th>
-                            <th>Use Cases</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Normal Distribution</td>
-                            <td>Mean (μ), Standard Deviation (σ)</td>
-                            <td>Natural phenomena, error analysis, approximating binomial distribution</td>
-                        </tr>
-                        <tr>
-                            <td>Binomial Distribution</td>
-                            <td>Number of trials (n), Probability of success (p)</td>
-                            <td>Binary outcomes, success/failure experiments</td>
-                        </tr>
-                        <tr>
-                            <td>Poisson Distribution</td>
-                            <td>Rate parameter (λ)</td>
-                            <td>Rare events, arrival processes, queuing theory</td>
-                        </tr>
-                        <tr>
-                            <td>Uniform Distribution</td>
-                            <td>Minimum (a), Maximum (b)</td>
-                            <td>Random number generation, simulation</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="formula">
-                    <strong>Normal Distribution PDF:</strong> f(x) = (1 / (σ√(2π))) × e<sup>-(x-μ)²/(2σ²)</sup>
-                    <br><strong>Binomial PMF:</strong> P(X = k) = <sup>n!</sup>/<sub>k!(n-k)!</sub> × p<sup>k</sup> × (1-p)<sup>n-k</sup>
-                    <br><strong>Poisson PMF:</strong> P(X = k) = (e<sup>-λ</sup> × λ<sup>k</sup>) / k!
-                </div>
-                
-                <div class="example">
-                    <strong>Example:</strong> For a Normal Distribution with μ = 100 and σ = 15, the probability of observing a value between 85 and 115 is approximately 0.68 (or 68%).
-                </div>
-                
-                <h3>Inferential Statistics</h3>
-                <p>Inferential Statistics helps you make predictions and decisions based on sample data, allowing you to draw conclusions about larger populations.</p>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Technique</th>
-                            <th>Description</th>
-                            <th>Applications</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Hypothesis Testing</td>
-                            <td>Tests claims about population parameters</td>
-                            <td>A/B testing, quality control, research validation</td>
-                        </tr>
-                        <tr>
-                            <td>Confidence Intervals</td>
-                            <td>Range of values likely to contain the true parameter</td>
-                            <td>Estimating population parameters with uncertainty</td>
-                        </tr>
-                        <tr>
-                            <td>Regression Analysis</td>
-                            <td>Models relationships between variables</td>
-                            <td>Prediction, trend analysis, relationship quantification</td>
-                        </tr>
-                        <tr>
-                            <td>ANOVA</td>
-                            <td>Analyzes differences among group means</td>
-                            <td>Comparing multiple treatments or groups</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="formula">
-                    <strong>t-statistic:</strong> t = (x̄ - μ) / (s / √n)
-                    <br><strong>95% Confidence Interval:</strong> x̄ ± t<sub>α/2</sub> × (s / √n)
-                    <br><strong>Simple Linear Regression:</strong> y = β₀ + β₁x + ε
-                </div>
-                
-                <div class="example">
-                    <strong>Example:</strong> For a sample with mean = 75, standard deviation = 8, and n = 36, a 95% confidence interval for the population mean would be approximately [72.4, 77.6].
-                </div>
-                
-                <h3>Data Visualization</h3>
-                <p>The Data Visualization module transforms your numerical data into intuitive graphical representations that help identify patterns, trends, and outliers.</p>
-                
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Plot Type</th>
-                            <th>Best Used For</th>
-                            <th>Features</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Histogram</td>
-                            <td>Displaying frequency distributions</td>
-                            <td>Adjustable bin width, overlay normal curve option</td>
-                        </tr>
-                        <tr>
-                            <td>Box Plot</td>
-                            <td>Showing data distribution and outliers</td>
-                            <td>Quartiles, whiskers, outlier identification</td>
-                        </tr>
-                        <tr>
-                            <td>Scatter Plot</td>
-                            <td>Examining relationships between variables</td>
-                            <td>Trend line options, correlation coefficient display</td>
-                        </tr>
-                        <tr>
-                            <td>Q-Q Plot</td>
-                            <td>Assessing normality of data</td>
-                            <td>Reference line, confidence bands</td>
-                        </tr>
-                    </tbody>
-                </table>
-                
-                <div class="example">
-                    <strong>Example:</strong> A histogram of student exam scores can quickly reveal if the distribution is normal, skewed, or bimodal, helping instructors understand performance patterns.
-                </div>
-            </section>
-
-            <!-- Learning Resources -->
-            <section class="doc-section" id="learning-resources">
-                <h2>Learning Resources</h2>
-                <p>To deepen your understanding of statistics and probability concepts, explore these valuable learning resources:</p>
-                
-                <div class="reference-links">
-                    <div class="reference-link">
-                        <div class="link-icon">🎓</div>
-                        <div>
-                            <h4>Khan Academy</h4>
-                            <a href="https://www.khanacademy.org/math/statistics-probability" target="_blank">Statistics and Probability Course</a>
+                    <div class="simulation-content">
+                        <h5 class="mb-3">Understanding Hypothesis Testing</h5>
+                        <div class="steps-container">
+                            <div class="step-item">
+                                <h5>State the Hypotheses</h5>
+                                <p>Every hypothesis test begins with two competing statements:</p>
+                                <ul>
+                                    <li><strong>Null Hypothesis (H₀):</strong> The status quo or no effect statement</li>
+                                    <li><strong>Alternative Hypothesis (H₁):</strong> What we're trying to show evidence for</li>
+                                </ul>
+                                <div class="form-group mt-2">
+                                    <label>Select Null Hypothesis Type:</label>
+                                    <select id="sim-h0-type" class="form-select">
+                                        <option value="equal">H₀: μ = μ₀ (Equal to)</option>
+                                        <option value="less-equal">H₀: μ ≤ μ₀ (Less than or equal to)</option>
+                                        <option value="greater-equal">H₀: μ ≥ μ₀ (Greater than or equal to)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <h5>Set Significance Level (α)</h5>
+                                <p>The significance level determines how strong evidence must be to reject H₀:</p>
+                                <div class="form-group">
+                                    <select id="sim-alpha" class="form-select">
+                                        <option value="0.01">α = 0.01 (1% chance of Type I error)</option>
+                                        <option value="0.05" selected>α = 0.05 (5% chance of Type I error)</option>
+                                        <option value="0.10">α = 0.10 (10% chance of Type I error)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <h5>Test Statistic & p-value</h5>
+                                <p>The test statistic measures how far your sample is from what's expected under H₀. The p-value is the probability of getting a result at least as extreme as yours if H₀ is true.</p>
+                                <div class="highlight">
+                                    <p><strong>Key Insight:</strong> The smaller the p-value, the stronger the evidence against H₀.</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <h5>Make a Decision</h5>
+                                <p>Compare p-value to significance level (α):</p>
+                                <ul>
+                                    <li>If p-value ≤ α: <strong>Reject H₀</strong></li>
+                                    <li>If p-value > α: <strong>Fail to reject H₀</strong></li>
+                                </ul>
+                            </div>
                         </div>
-                    </div>
-                    <div class="reference-link">
-                        <div class="link-icon">📚</div>
-                        <div>
-                            <h4>Wikipedia</h4>
-                            <a href="https://en.wikipedia.org/wiki/Statistics" target="_blank">Statistics Portal</a>
-                        </div>
-                    </div>
-                    <div class="reference-link">
-                        <div class="link-icon">🧮</div>
-                        <div>
-                            <h4>Statology</h4>
-                            <a href="https://www.statology.org/" target="_blank">Statistics Tutorials</a>
+                        
+                        <div class="learning-links">
+                            <h5>Learning Resources</h5>
+                            <ul>
+                                <li><a href="#" id="link-pvalue">What is a p-value?</a></li>
+                                <li><a href="#" id="link-ci">How to interpret confidence intervals</a></li>
+                                <li><a href="#" id="link-errors">Type I vs Type II errors</a></li>
+                                <li><a href="#" id="link-test-selection">How to choose the right statistical test</a></li>
+                            </ul>
                         </div>
                     </div>
                 </div>
                 
-                <div class="reference-links">
-                    <div class="reference-link">
-                        <div class="link-icon">📹</div>
-                        <div>
-                            <h4>YouTube</h4>
-                            <a href="https://www.youtube.com/playlist?list=PL8dPuuaLjXtNM_Y-bUAhblSAdWRnmBUcr" target="_blank">Crash Course Statistics</a>
-                        </div>
+                <!-- Interactive Simulation Panel -->
+                <div class="test-card">
+                    <div class="simulation-toggle">
+                        <h4 class="mb-0">Hypothesis Testing Simulation</h4>
+                        <span class="toggle-icon">▼</span>
                     </div>
-                    <div class="reference-link">
-                        <div class="link-icon">📝</div>
-                        <div>
-                            <h4>OpenStax</h4>
-                            <a href="https://openstax.org/details/books/introductory-statistics" target="_blank">Free Statistics Textbook</a>
+                    <div class="simulation-content">
+                        <p>This interactive simulation will help you understand the decisions in hypothesis testing.</p>
+                        
+                        <div class="form-group">
+                            <label for="sim-hypo-mean">Hypothesized Mean (μ₀):</label>
+                            <input type="number" id="sim-hypo-mean" class="form-control" value="50">
                         </div>
-                    </div>
-                    <div class="reference-link">
-                        <div class="link-icon">🖥️</div>
-                        <div>
-                            <h4>Towards Data Science</h4>
-                            <a href="https://towardsdatascience.com/statistics/home" target="_blank">Statistics Articles</a>
+                        
+                        <div class="form-group">
+                            <label for="sim-sample-mean">Your Sample Mean (x̄):</label>
+                            <input type="number" id="sim-sample-mean" class="form-control" value="52.5">
                         </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Development Team -->
-            <section class="doc-section" id="development-team">
-                <h2>Development Team</h2>
-                <p>The Web-Based Statistical and Probability Calculator was developed by a team of dedicated computer science students committed to making statistics accessible and understandable.</p>
-                
-                <div class="team-grid">
-                    <div class="team-card">
-                        <div class="team-image">
-                            <img src="/assets/images/gabrielle.jpg" alt="Team Member Photo" />
+                        
+                        <div class="form-group">
+                            <label for="sim-std-dev">Standard Deviation (σ):</label>
+                            <input type="number" id="sim-std-dev" class="form-control" value="5">
                         </div>
-                        <div class="team-info">
-                            <h4>Gabrielle Briliant Lintong</h4>
-                            <p>Student ID: 001202400115</p>
-                            <p class="email">gabrielle.lintong@student.president.ac.id</p>
+                        
+                        <div class="form-group">
+                            <label for="sim-sample-size">Sample Size (n):</label>
+                            <input type="number" id="sim-sample-size" class="form-control" value="30">
                         </div>
-                    </div>
-                    <div class="team-card">
-                        <div class="team-image">
-                            <img src="/assets/images/pusri.jpg" alt="Team Member Photo" />
-                        </div>
-                        <div class="team-info">
-                            <h4>Pusri Ananda Handal</h4>
-                            <p>Student ID: 001202400031</p>
-                            <p class="email">pusri.handal@student.president.ac.id</p>
-                        </div>
-                    </div>
-                    <div class="team-card">
-                        <div class="team-image">
-                            <img src="/assets/images/nabil.jpg" alt="Team Member Photo" />
-                        </div>
-                        <div class="team-info">
-                            <h4>Muhammad Nabil Indraprasta</h4>
-                            <p>Student ID: 001202400186</p>
-                            <p class="email">david.johnson@student.president.ac.id</p>
-                        </div>
-                    </div>
-                    <div class="team-card">
-                        <div class="team-image">
-                            <img src="/assets/images/Sir_Asep.jpg" alt="Team Member Photo" />
-                        </div>
-                        <div class="team-info">
-                            <h4>Asep Maulana</h4>
-                            <p>Supervisor & Lecturer</p>
-                            <p class="email">asep.maulana@president.ac.id</p>
+                        
+                        <button id="run-simulation" class="btn btn-primary mt-3">Run Simulation</button>
+                        
+                        <div id="simulation-results" class="mt-4" style="display: none;">
+                            <h5>Simulation Results</h5>
+                            <div class="chart-container">
+                                <canvas id="simulationChart"></canvas>
+                            </div>
+                            <div id="sim-explanation" class="mt-3"></div>
                         </div>
                     </div>
                 </div>
-                
-                <h3>Contact Information</h3>
-                <p>For questions, bug reports, or feature requests, please contact any member of our development team or use the following channels:</p>
-                <ul>
-                    <li>Project Repository: <a href="https://github.com/statcalc/web-calculator" target="_blank">github.com/statcalc/web-calculator</a></li>
-                    <li>Support Email: <a href="mailto:support@statcalc.edu">support@statcalc.edu</a></li>
-                    <li>Department Office: Computer Science Building, Room 305</li>
-                </ul>
-            </section>
+            </div>
+        </div>
+        
+        <!-- Additional Forms (Initially Hidden) -->
+        <div id="additional-forms" style="display: none;">
+            <!-- T-Test Confidence Interval Form -->
+            <div id="ci-t-form" style="display: none;">
+                <h4 class="mb-3">T-Test Confidence Interval</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="t-sample-mean" class="form-label">
+                                Sample Mean (x̄)
+                            </label>
+                            <input type="number" step="any" id="t-sample-mean" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="t-sample-std" class="form-label">
+                                Sample Standard Deviation (s)
+                            </label>
+                            <input type="number" step="any" min="0" id="t-sample-std" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="t-sample-size" class="form-label">
+                                Sample Size (n)
+                            </label>
+                            <input type="number" min="2" id="t-sample-size" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="t-confidence" class="form-label">
+                                Confidence Level (%)
+                            </label>
+                            <select id="t-confidence" class="form-select" required>
+                                <option value="0.90">90%</option>
+                                <option value="0.95" selected>95%</option>
+                                <option value="0.99">99%</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="button" id="calculate-t-ci" class="btn btn-primary">Calculate Confidence Interval</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('ci-t')">Reset</button>
+                </div>
+            </div>
             
-            <!-- FAQ Section -->
-            <section class="doc-section" id="faq">
-                <h2>Frequently Asked Questions</h2>
-                
-                <h3>General Questions</h3>
-                <div class="faq-item">
-                    <h4>Can I use this calculator for my statistics homework?</h4>
-                    <p>Yes! The calculator is designed to help you understand statistical concepts and verify your calculations. However, we recommend using it as a learning tool rather than just copying answers.</p>
+            <!-- One-Sample Hypothesis Test Form -->
+            <div id="one-sample-form" style="display: none;">
+                <h4 class="mb-3">One-Sample Hypothesis Test</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-null-hypo" class="form-label">
+                                Null Hypothesis Mean (μ₀)
+                            </label>
+                            <input type="number" step="any" id="one-null-hypo" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-sample-mean" class="form-label">
+                                Sample Mean (x̄)
+                            </label>
+                            <input type="number" step="any" id="one-sample-mean" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Standard Deviation Type</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="std-type" id="std-known" value="known" checked>
+                                <label class="form-check-label" for="std-known">
+                                    Known Population σ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="std-type" id="std-sample" value="sample">
+                                <label class="form-check-label" for="std-sample">
+                                    Sample s
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-std-dev" class="form-label">
+                                Standard Deviation (σ or s)
+                            </label>
+                            <input type="number" step="any" min="0" id="one-std-dev" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-sample-size" class="form-label">
+                                Sample Size (n)
+                            </label>
+                            <input type="number" min="1" id="one-sample-size" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-alt-hypo" class="form-label">
+                                Alternative Hypothesis
+                            </label>
+                            <select id="one-alt-hypo" class="form-select" required>
+                                <option value="two-sided">μ ≠ μ₀ (Two-sided)</option>
+                                <option value="less-than">μ < μ₀ (Left-tailed)</option>
+                                <option value="greater-than">μ > μ₀ (Right-tailed)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-alpha" class="form-label">
+                                Significance Level (α)
+                            </label>
+                            <select id="one-alpha" class="form-select" required>
+                                <option value="0.01">0.01 (1%)</option>
+                                <option value="0.05" selected>0.05 (5%)</option>
+                                <option value="0.10">0.10 (10%)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="button" id="calculate-one-sample" class="btn btn-primary">Perform Hypothesis Test</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('one-sample')">Reset</button>
+                </div>
+            </div>
+            
+            <!-- Two-Sample Hypothesis Test Form -->
+            <div id="two-sample-form" style="display: none;">
+                <h4 class="mb-3">Two-Sample Hypothesis Test</h4>
+                <h5>First Sample (Group 1)</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample1-mean" class="form-label">
+                                Mean (x̄₁)
+                            </label>
+                            <input type="number" step="any" id="two-sample1-mean" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample1-std" class="form-label">
+                                Standard Deviation (s₁)
+                            </label>
+                            <input type="number" step="any" min="0" id="two-sample1-std" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample1-size" class="form-label">
+                                Sample Size (n₁)
+                            </label>
+                            <input type="number" min="2" id="two-sample1-size" class="form-control" required>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="faq-item">
-                    <h4>Is there a limit to how much data I can process?</h4>
-                    <p>The web application can handle datasets with up to 10,000 data points efficiently. For larger datasets, we recommend using the CSV upload feature and be aware that processing might take longer.</p>
+                <h5 class="mt-3">Second Sample (Group 2)</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample2-mean" class="form-label">
+                                Mean (x̄₂)
+                            </label>
+                            <input type="number" step="any" id="two-sample2-mean" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample2-std" class="form-label">
+                                Standard Deviation (s₂)
+                            </label>
+                            <input type="number" step="any" min="0" id="two-sample2-std" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample2-size" class="form-label">
+                                Sample Size (n₂)
+                            </label>
+                            <input type="number" min="2" id="two-sample2-size" class="form-control" required>
+                        </div>
+                    </div>
                 </div>
                 
-                <div class="faq-item">
-                    <h4>Can I save my calculations for later reference?</h4>
-                    <p>Yes! You can export your results as CSV, PDF, or PNG files using the export buttons available in the results section.</p>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="two-alt-hypo" class="form-label">
+                                Alternative Hypothesis
+                            </label>
+                            <select id="two-alt-hypo" class="form-select" required>
+                                <option value="two-sided">μ₁ ≠ μ₂ (Two-sided)</option>
+                                <option value="less-than">μ₁ < μ₂ (Left-tailed)</option>
+                                <option value="greater-than">μ₁ > μ₂ (Right-tailed)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="two-alpha" class="form-label">
+                                Significance Level (α)
+                            </label>
+                            <select id="two-alpha" class="form-select" required>
+                                <option value="0.01">0.01 (1%)</option>
+                                <option value="0.05" selected>0.05 (5%)</option>
+                                <option value="0.10">0.10 (10%)</option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 
-                <h3>Technical Questions</h3>
-                <div class="faq-item">
-                    <h4>Which browsers are supported?</h4>
-                    <p>The calculator works best on modern browsers like Chrome, Firefox, Safari, and Edge. We recommend keeping your browser updated to the latest version for optimal performance.</p>
+                <div class="form-group mt-3">
+                    <label class="form-label">Variance Assumption</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="variance-type" id="var-equal" value="equal" checked>
+                        <label class="form-check-label" for="var-equal">
+                            Equal Variances
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="variance-type" id="var-unequal" value="unequal">
+                        <label class="form-check-label" for="var-unequal">
+                            Unequal Variances (Welch's t-test)
+                        </label>
+                    </div>
                 </div>
                 
-                <div class="faq-item">
-                    <h4>Does the calculator work offline?</h4>
-                    <p>Once the page has loaded, most calculations can be performed offline. However, features like saving to cloud storage or sharing results require an internet connection.</p>
+                <div class="mt-3">
+                    <button type="button" id="calculate-two-sample" class="btn btn-primary">Perform Hypothesis Test</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('two-sample')">Reset</button>
+                </div>
+            </div>
+            
+            <!-- Chi-Square Test for Independence Form -->
+            <div id="chi-square-form" style="display: none;">
+                <h4 class="mb-3">Chi-Square Test for Independence</h4>
+                <p>Enter values for your contingency table:</p>
+                
+                <div class="form-group mb-3">
+                    <label for="chi-rows" class="form-label">Number of Rows:</label>
+                    <select id="chi-rows" class="form-select" style="width: 100px;">
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
                 </div>
                 
-                <div class="faq-item">
-                    <h4>How accurate are the calculations?</h4>
-                    <p>The calculator uses industry-standard algorithms and maintains precision up to 6 decimal places for most calculations, making it suitable for academic and professional use.</p>
+                <div class="form-group mb-3">
+                    <label for="chi-cols" class="form-label">Number of Columns:</label>
+                    <select id="chi-cols" class="form-select" style="width: 100px;">
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
                 </div>
-            </section>
+                
+                <button id="create-table" class="btn btn-outline-primary mb-3">Create Table</button>
+                
+                <div id="contingency-table-container">
+                    <table class="contingency-table" id="chi-table">
+                        <tr>
+                            <th></th>
+                            <th>Category 1</th>
+                            <th>Category 2</th>
+                        </tr>
+                        <tr>
+                            <th>Group 1</th>
+                            <td><input type="number" min="0" class="form-control chi-cell" id="cell-0-0" required></td>
+                            <td><input type="number" min="0" class="form-control chi-cell" id="cell-0-1" required></td>
+                        </tr>
+                        <tr>
+                            <th>Group 2</th>
+                            <td><input type="number" min="0" class="form-control chi-cell" id="cell-1-0" required></td>
+                            <td><input type="number" min="0" class="form-control chi-cell" id="cell-1-1" required></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label for="chi-alpha" class="form-label">
+                        Significance Level (α)
+                    </label>
+                    <select id="chi-alpha" class="form-select" style="width: 150px;" required>
+                        <option value="0.01">0.01 (1%)</option>
+                        <option value="0.05" selected>0.05 (5%)</option>
+                        <option value="0.10">0.10 (10%)</option>
+                    </select>
+                </div>
+                
+                <div class="mt-3">
+                    <button type="button" id="calculate-chi-square" class="btn btn-primary">Perform Chi-Square Test</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('chi-square')">Reset</button>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- Footer -->
     <footer></footer>
 
-    <script src="/components/script-file.js"></script>
+    <script src="components/script-file.js"></script>
+    <script src="inference.js"></script>
 </body>
 </html>
