@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inferential Statistics Calculator | StatCalc</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="/inference/inference.css">
+    <link rel="stylesheet" href="/components/styles-file.css">
+</head>
+<body>
+    <header></header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Inferential Statistics Calculator</h1>
+            <p>Perform statistical inference tests with step-by-step explanations and visualizations to enhance your understanding of statistical concepts.</p>
+        </div>
+    </section>
+
+    <main class="container mb-5">
+        <div class="row">
+            <div class="col-lg-8 mb-4">
+                <div class="test-card">
+                    <div class="test-card-header">
+                        <h3>Statistical Test Selection</h3>
+                    </div>
+                    <div class="test-card-body">
+                        <div class="form-group">
+                            <label for="testType" class="form-label">Select Test Type:</label>
+                            <select id="testType" class="form-select">
+                                <option value="ci-z">Confidence Interval Estimation (Z-test)</option>
+                                <option value="ci-t">Confidence Interval Estimation (T-test)</option>
+                                <option value="one-sample">One-Sample Hypothesis Test</option>
+                                <option value="two-sample">Two-Sample Hypothesis Test</option>
+                                <option value="chi-square">Chi-Square Test for Independence</option>
+                            </select>
+                        </div>
+                        
+                        <!-- Dynamic Test Forms Will Be Loaded Here -->
+                        <div id="dynamicFormContainer">
+                            <!-- Z-Test Confidence Interval Form (Default) -->
+                            <div id="ci-z-form">
+                                <h4 class="mb-3">Z-Test Confidence Interval</h4>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="z-sample-mean" class="form-label">
+                                                <div class="input-with-tooltip">
+                                                    Sample Mean (x̄)
+                                                    <span class="info-tooltip" data-bs-toggle="tooltip" title="Average value of the sample data">
+                                                        <i class="bi bi-info-circle"></i>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <input type="number" step="any" id="z-sample-mean" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="z-pop-std" class="form-label">
+                                                <div class="input-with-tooltip">
+                                                    Population Standard Deviation (σ)
+                                                    <span class="info-tooltip" data-bs-toggle="tooltip" title="Known standard deviation of the population">
+                                                        <i class="bi bi-info-circle"></i>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <input type="number" step="any" min="0" id="z-pop-std" class="form-control" required>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="z-sample-size" class="form-label">
+                                                <div class="input-with-tooltip">
+                                                    Sample Size (n)
+                                                    <span class="info-tooltip" data-bs-toggle="tooltip" title="Number of observations in the sample">
+                                                        <i class="bi bi-info-circle"></i>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <input type="number" min="1" id="z-sample-size" class="form-control" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="z-confidence" class="form-label">
+                                                <div class="input-with-tooltip">
+                                                    Confidence Level (%)
+                                                    <span class="info-tooltip" data-bs-toggle="tooltip" title="Level of confidence for the interval (common values: 90%, 95%, 99%)">
+                                                        <i class="bi bi-info-circle"></i>
+                                                    </span>
+                                                </div>
+                                            </label>
+                                            <select id="z-confidence" class="form-select" required>
+                                                <option value="0.90">90%</option>
+                                                <option value="0.95" selected>95%</option>
+                                                <option value="0.99">99%</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mt-3">
+                                    <button type="button" id="calculate-z-ci" class="btn btn-primary">Calculate Confidence Interval</button>
+                                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('ci-z')">Reset</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Other test forms will be loaded dynamically -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Results Section -->
+                <div id="results-container" class="test-card" style="display: none;">
+                    <div class="test-card-header">
+                        <h3>Results</h3>
+                    </div>
+                    <div class="test-card-body">
+                        <div id="results-content">
+                            <!-- Results will be displayed here -->
+                        </div>
+                        <div class="chart-container">
+                            <canvas id="resultsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <!-- Educational Panel -->
+                <div class="test-card mb-4">
+                    <div class="simulation-toggle toggle-open">
+                        <h4 class="mb-0">Interactive Learning Panel</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="simulation-content">
+                        <h5 class="mb-3">Understanding Hypothesis Testing</h5>
+                        <div class="steps-container">
+                            <div class="step-item">
+                                <h5>State the Hypotheses</h5>
+                                <p>Every hypothesis test begins with two competing statements:</p>
+                                <ul>
+                                    <li><strong>Null Hypothesis (H₀):</strong> The status quo or no effect statement</li>
+                                    <li><strong>Alternative Hypothesis (H₁):</strong> What we're trying to show evidence for</li>
+                                </ul>
+                                <div class="form-group mt-2">
+                                    <label>Select Null Hypothesis Type:</label>
+                                    <select id="sim-h0-type" class="form-select">
+                                        <option value="equal">H₀: μ = μ₀ (Equal to)</option>
+                                        <option value="less-equal">H₀: μ ≤ μ₀ (Less than or equal to)</option>
+                                        <option value="greater-equal">H₀: μ ≥ μ₀ (Greater than or equal to)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <h5>Set Significance Level (α)</h5>
+                                <p>The significance level determines how strong evidence must be to reject H₀:</p>
+                                <div class="form-group">
+                                    <select id="sim-alpha" class="form-select">
+                                        <option value="0.01">α = 0.01 (1% chance of Type I error)</option>
+                                        <option value="0.05" selected>α = 0.05 (5% chance of Type I error)</option>
+                                        <option value="0.10">α = 0.10 (10% chance of Type I error)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <h5>Test Statistic & p-value</h5>
+                                <p>The test statistic measures how far your sample is from what's expected under H₀. The p-value is the probability of getting a result at least as extreme as yours if H₀ is true.</p>
+                                <div class="highlight">
+                                    <p><strong>Key Insight:</strong> The smaller the p-value, the stronger the evidence against H₀.</p>
+                                </div>
+                            </div>
+                            <div class="step-item">
+                                <h5>Make a Decision</h5>
+                                <p>Compare p-value to significance level (α):</p>
+                                <ul>
+                                    <li>If p-value ≤ α: <strong>Reject H₀</strong></li>
+                                    <li>If p-value > α: <strong>Fail to reject H₀</strong></li>
+                                </ul>
+                            </div>
+                        </div>
+                        
+                        <div class="learning-links">
+                            <h5>Learning Resources</h5>
+                            <ul>
+                                <li><a href="#" id="link-pvalue">What is a p-value?</a></li>
+                                <li><a href="#" id="link-ci">How to interpret confidence intervals</a></li>
+                                <li><a href="#" id="link-errors">Type I vs Type II errors</a></li>
+                                <li><a href="#" id="link-test-selection">How to choose the right statistical test</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Interactive Simulation Panel -->
+                <div class="test-card">
+                    <div class="simulation-toggle">
+                        <h4 class="mb-0">Hypothesis Testing Simulation</h4>
+                        <span class="toggle-icon">▼</span>
+                    </div>
+                    <div class="simulation-content">
+                        <p>This interactive simulation will help you understand the decisions in hypothesis testing.</p>
+                        
+                        <div class="form-group">
+                            <label for="sim-hypo-mean">Hypothesized Mean (μ₀):</label>
+                            <input type="number" id="sim-hypo-mean" class="form-control" value="50">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sim-sample-mean">Your Sample Mean (x̄):</label>
+                            <input type="number" id="sim-sample-mean" class="form-control" value="52.5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sim-std-dev">Standard Deviation (σ):</label>
+                            <input type="number" id="sim-std-dev" class="form-control" value="5">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="sim-sample-size">Sample Size (n):</label>
+                            <input type="number" id="sim-sample-size" class="form-control" value="30">
+                        </div>
+                        
+                        <button id="run-simulation" class="btn btn-primary mt-3">Run Simulation</button>
+                        
+                        <div id="simulation-results" class="mt-4" style="display: none;">
+                            <h5>Simulation Results</h5>
+                            <div class="chart-container">
+                                <canvas id="simulationChart"></canvas>
+                            </div>
+                            <div id="sim-explanation" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Additional Forms (Initially Hidden) -->
+        <div id="additional-forms" style="display: none;">
+            <!-- T-Test Confidence Interval Form -->
+            <div id="ci-t-form" style="display: none;">
+                <h4 class="mb-3">T-Test Confidence Interval</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="t-sample-mean" class="form-label">
+                                Sample Mean (x̄)
+                            </label>
+                            <input type="number" step="any" id="t-sample-mean" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="t-sample-std" class="form-label">
+                                Sample Standard Deviation (s)
+                            </label>
+                            <input type="number" step="any" min="0" id="t-sample-std" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="t-sample-size" class="form-label">
+                                Sample Size (n)
+                            </label>
+                            <input type="number" min="2" id="t-sample-size" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="t-confidence" class="form-label">
+                                Confidence Level (%)
+                            </label>
+                            <select id="t-confidence" class="form-select" required>
+                                <option value="0.90">90%</option>
+                                <option value="0.95" selected>95%</option>
+                                <option value="0.99">99%</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="button" id="calculate-t-ci" class="btn btn-primary">Calculate Confidence Interval</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('ci-t')">Reset</button>
+                </div>
+            </div>
+            
+            <!-- One-Sample Hypothesis Test Form -->
+            <div id="one-sample-form" style="display: none;">
+                <h4 class="mb-3">One-Sample Hypothesis Test</h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-null-hypo" class="form-label">
+                                Null Hypothesis Mean (μ₀)
+                            </label>
+                            <input type="number" step="any" id="one-null-hypo" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-sample-mean" class="form-label">
+                                Sample Mean (x̄)
+                            </label>
+                            <input type="number" step="any" id="one-sample-mean" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="form-label">Standard Deviation Type</label>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="std-type" id="std-known" value="known" checked>
+                                <label class="form-check-label" for="std-known">
+                                    Known Population σ
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="std-type" id="std-sample" value="sample">
+                                <label class="form-check-label" for="std-sample">
+                                    Sample s
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-std-dev" class="form-label">
+                                Standard Deviation (σ or s)
+                            </label>
+                            <input type="number" step="any" min="0" id="one-std-dev" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-sample-size" class="form-label">
+                                Sample Size (n)
+                            </label>
+                            <input type="number" min="1" id="one-sample-size" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-alt-hypo" class="form-label">
+                                Alternative Hypothesis
+                            </label>
+                            <select id="one-alt-hypo" class="form-select" required>
+                                <option value="two-sided">μ ≠ μ₀ (Two-sided)</option>
+                                <option value="less-than">μ < μ₀ (Left-tailed)</option>
+                                <option value="greater-than">μ > μ₀ (Right-tailed)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="one-alpha" class="form-label">
+                                Significance Level (α)
+                            </label>
+                            <select id="one-alpha" class="form-select" required>
+                                <option value="0.01">0.01 (1%)</option>
+                                <option value="0.05" selected>0.05 (5%)</option>
+                                <option value="0.10">0.10 (10%)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button type="button" id="calculate-one-sample" class="btn btn-primary">Perform Hypothesis Test</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('one-sample')">Reset</button>
+                </div>
+            </div>
+            
+            <!-- Two-Sample Hypothesis Test Form -->
+            <div id="two-sample-form" style="display: none;">
+                <h4 class="mb-3">Two-Sample Hypothesis Test</h4>
+                <h5>First Sample (Group 1)</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample1-mean" class="form-label">
+                                Mean (x̄₁)
+                            </label>
+                            <input type="number" step="any" id="two-sample1-mean" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample1-std" class="form-label">
+                                Standard Deviation (s₁)
+                            </label>
+                            <input type="number" step="any" min="0" id="two-sample1-std" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample1-size" class="form-label">
+                                Sample Size (n₁)
+                            </label>
+                            <input type="number" min="2" id="two-sample1-size" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <h5 class="mt-3">Second Sample (Group 2)</h5>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample2-mean" class="form-label">
+                                Mean (x̄₂)
+                            </label>
+                            <input type="number" step="any" id="two-sample2-mean" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample2-std" class="form-label">
+                                Standard Deviation (s₂)
+                            </label>
+                            <input type="number" step="any" min="0" id="two-sample2-std" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="form-group">
+                            <label for="two-sample2-size" class="form-label">
+                                Sample Size (n₂)
+                            </label>
+                            <input type="number" min="2" id="two-sample2-size" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="two-alt-hypo" class="form-label">
+                                Alternative Hypothesis
+                            </label>
+                            <select id="two-alt-hypo" class="form-select" required>
+                                <option value="two-sided">μ₁ ≠ μ₂ (Two-sided)</option>
+                                <option value="less-than">μ₁ < μ₂ (Left-tailed)</option>
+                                <option value="greater-than">μ₁ > μ₂ (Right-tailed)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="two-alpha" class="form-label">
+                                Significance Level (α)
+                            </label>
+                            <select id="two-alpha" class="form-select" required>
+                                <option value="0.01">0.01 (1%)</option>
+                                <option value="0.05" selected>0.05 (5%)</option>
+                                <option value="0.10">0.10 (10%)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label class="form-label">Variance Assumption</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="variance-type" id="var-equal" value="equal" checked>
+                        <label class="form-check-label" for="var-equal">
+                            Equal Variances
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="variance-type" id="var-unequal" value="unequal">
+                        <label class="form-check-label" for="var-unequal">
+                            Unequal Variances (Welch's t-test)
+                        </label>
+                    </div>
+                </div>
+                
+                <div class="mt-3">
+                    <button type="button" id="calculate-two-sample" class="btn btn-primary">Perform Hypothesis Test</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('two-sample')">Reset</button>
+                </div>
+            </div>
+            
+            <!-- Chi-Square Test for Independence Form -->
+            <div id="chi-square-form" style="display: none;">
+                <h4 class="mb-3">Chi-Square Test for Independence</h4>
+                <p>Enter values for your contingency table:</p>
+                
+                <div class="form-group mb-3">
+                    <label for="chi-rows" class="form-label">Number of Rows:</label>
+                    <select id="chi-rows" class="form-select" style="width: 100px;">
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                
+                <div class="form-group mb-3">
+                    <label for="chi-cols" class="form-label">Number of Columns:</label>
+                    <select id="chi-cols" class="form-select" style="width: 100px;">
+                        <option value="2" selected>2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+                
+                <button id="create-table" class="btn btn-outline-primary mb-3">Create Table</button>
+                
+                <div id="contingency-table-container">
+                    <table class="contingency-table" id="chi-table">
+                        <tr>
+                            <th></th>
+                            <th>Category 1</th>
+                            <th>Category 2</th>
+                        </tr>
+                        <tr>
+                            <th>Group 1</th>
+                            <td><input type="number" min="0" class="form-control chi-cell" id="cell-0-0" required></td>
+                            <td><input type="number" min="0" class="form-control chi-cell" id="cell-0-1" required></td>
+                        </tr>
+                        <tr>
+                            <th>Group 2</th>
+                            <td><input type="number" min="0" class="form-control chi-cell" id="cell-1-0" required></td>
+                            <td><input type="number" min="0" class="form-control chi-cell" id="cell-1-1" required></td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="form-group mt-3">
+                    <label for="chi-alpha" class="form-label">
+                        Significance Level (α)
+                    </label>
+                    <select id="chi-alpha" class="form-select" style="width: 150px;" required>
+                        <option value="0.01">0.01 (1%)</option>
+                        <option value="0.05" selected>0.05 (5%)</option>
+                        <option value="0.10">0.10 (10%)</option>
+                    </select>
+                </div>
+                
+                <div class="mt-3">
+                    <button type="button" id="calculate-chi-square" class="btn btn-primary">Perform Chi-Square Test</button>
+                    <button type="button" class="btn btn-outline-secondary ms-2" onclick="resetForm('chi-square')">Reset</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer></footer>
+
+    <script src="/components/script-file.js"></script>
+    <script src="inference.js"></script>
+</body>
+</html>

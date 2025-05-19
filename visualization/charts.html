@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Visualization - StatCalc</title>
+    <link rel="stylesheet" href="/visualization/charts.css">
+    <link rel="stylesheet" href="/components/styles-file.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <header></header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Data Visualization</h1>
+            <p>Visualize your data with interactive charts and gain insights through graphical representations.</p>
+        </div>
+    </section>
+        
+    <main class="container mb-5">
+        <section class="data-input">    
+            <div class="card">
+                <div class="card-header">
+                    <h2>Enter Your Data</h2>
+                </div>
+                <div class="card-body">
+                    <form id="visualization-form">
+                        <div class="form-group">
+                            <label for="data-input">Numeric Data (comma separated values):</label>
+                            <textarea 
+                                id="data-input" 
+                                class="form-control" 
+                                rows="3" 
+                                placeholder="Example: 12, 15, 18, 20, 25, 30, 22, 19"
+                                required></textarea>
+                            <small class="form-text">Enter numeric values separated by commas</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="chart-type">Chart Type:</label>
+                            <div class="select-wrapper">
+                                <select id="chart-type" class="form-control" required>
+                                    <option value="bar">Bar Chart</option>
+                                    <option value="pie">Pie Chart</option>
+                                    <option value="line">Line Chart</option>
+                                    <option value="scatter">Scatter Plot</option>
+                                    <option value="histogram">Histogram</option>
+                                    <option value="boxplot">Box Plot</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group" id="bin-container" style="display: none;">
+                                <label for="bins">Number of Bins (Histogram):</label>
+                                <input type="number" id="bins" class="form-control" min="2" max="20" value="5">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" id="generate-btn" class="btn btn-primary">Generate Graph</button>
+                            <button type="button" id="sample-data-btn" class="btn btn-secondary">Use Sample Data</button>
+                            <button type="reset" class="btn btn-outline">Clear</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section id="visualization-section" class="visualization hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2 id="chart-title">Data Visualization</h2>
+                    <div class="chart-info">
+                        <button id="chart-info-btn" class="info-btn" title="Learn about this chart type">
+                            <span class="info-icon">ℹ️</span>
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="chart-canvas"></canvas>
+                    </div>
+                    <div id="chart-tooltip" class="tooltip hidden">
+                        <div class="tooltip-header">
+                            <h3 id="tooltip-title">Chart Information</h3>
+                            <button id="tooltip-close" class="close-btn">&times;</button>
+                        </div>
+                        <div id="tooltip-content" class="tooltip-content"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="analysis-section" class="analysis hidden">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Data Analysis</h2>
+                </div>
+                <div class="card-body">
+                    <div id="stats-summary" class="stats-grid">
+                        <!-- Statistics content will be generated here -->
+                    </div>
+                    <div id="analysis-text" class="analysis-text">
+                        <!-- Analysis explanation will be generated here -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="resources">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Learn More About Statistical Visualization</h2>
+                </div>
+                <div class="card-body resources-grid">
+                    <div class="resource-item">
+                        <h3>Khan Academy</h3>
+                        <p>Comprehensive tutorials and lessons on statistical concepts and data visualization.</p>
+                        <a href="https://www.khanacademy.org/math/statistics-probability" target="_blank" class="resource-link">
+                            Explore Resources
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                    <div class="resource-item">
+                        <h3>Wikipedia Statistics</h3>
+                        <p>Detailed information about different types of statistical graphs and their applications.</p>
+                        <a href="https://en.wikipedia.org/wiki/Statistical_graphics" target="_blank" class="resource-link">
+                            Learn More
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                    <div class="resource-item">
+                        <h3>Chart.js Documentation</h3>
+                        <p>Learn more about creating interactive charts and customizing visualizations.</p>
+                        <a href="https://www.chartjs.org/docs/latest/" target="_blank" class="resource-link">
+                            View Documentation
+                            <span class="arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer></footer>
+
+    <script src="/components/script-file.js"></script>
+    <script src="charts.js"></script>
+</body>
+</html>

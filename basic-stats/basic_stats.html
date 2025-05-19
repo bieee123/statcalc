@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Basic Statistics Calculator | Statistical & Probability Calculator</title>
+    <link rel="stylesheet" href="/basic-stats/basic_stats.css">
+    <link rel="stylesheet" href="/components/styles-file.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <header></header>
+
+    <main>
+        <section class="page-header">
+            <div class="container">
+                <h1>Basic Statistics Calculator</h1>
+                <p>Calculate fundamental statistical measures with step-by-step explanations.</p>
+            </div>
+        </section>
+
+        <section class="calculator-section">
+            <div class="container">
+                <div class="calculator-container">
+                    <h2>Enter Your Data</h2>
+                    
+                    <div class="form-group">
+                        <label for="dataInput">
+                            Enter comma or space separated values:
+                            <span class="tooltip-container">
+                                <span class="tooltip-icon">i</span>
+                                <div class="tooltip-content">
+                                    <h4>Data Input</h4>
+                                    <p>Enter numeric values separated by commas or spaces. For example:</p>
+                                    <p class="formula">10, 20, 30, 40, 50</p>
+                                    <p>or</p>
+                                    <p class="formula">10 20 30 40 50</p>
+                                </div>
+                            </span>
+                        </label>
+                        <textarea id="dataInput" rows="5" placeholder="Example: 10, 15, 20, 25, 30"></textarea>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="loadSample">Or load sample data:</label>
+                            <select id="loadSample">
+                                <option value="">-- Select Sample Data --</option>
+                                <option value="basic">Basic Sample (10 values)</option>
+                                <option value="normal">Normal Distribution (30 values)</option>
+                                <option value="skewed">Skewed Distribution (15 values)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="decimalPlaces">Decimal places in results:</label>
+                            <select id="decimalPlaces">
+                                <option value="2">2 decimal places</option>
+                                <option value="3">3 decimal places</option>
+                                <option value="4">4 decimal places</option>
+                                <option value="6">6 decimal places</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Select calculations:</label>
+                            <div class="checkbox-group">
+                                <label><input type="checkbox" name="calculations" value="mean" data-term="mean" checked> Mean</label>
+                                <label><input type="checkbox" name="calculations" value="median" data-term="median" checked> Median</label>
+                                <label><input type="checkbox" name="calculations" value="mode" data-term="mode" checked> Mode</label>
+                                <label><input type="checkbox" name="calculations" value="range" data-term="range" checked> Range</label>
+                                <label><input type="checkbox" name="calculations" value="variance" data-term="variance" checked> Variance</label>
+                                <label><input type="checkbox" name="calculations" value="stdDev" data-term="stdDev" checked> Standard Deviation</label>
+                                <label><input type="checkbox" name="calculations" value="quartiles" data-term="quartiles" checked> Quartiles & IQR</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="calculateBtn" class="btn primary">Calculate Statistics</button>
+
+                    <div class="mini-glossary" id="miniGlossary" style="display: none;">
+                    <div class="glossary-header">
+                        <h3>Statistical Terms Glossary</h3>
+                        <p>Quick reference for statistical terminology</p>
+                    </div>
+                    <div class="glossary-content">
+                        <div class="glossary-item" data-term="mean">
+                            <h4>Mean</h4>
+                            <p>The average of all values in a dataset, calculated by summing all values and dividing by the count.</p>
+                            <p class="formula">x̄ = (Σ x) / n</p>
+                        </div>
+                        <div class="glossary-item" data-term="median">
+                            <h4>Median</h4>
+                            <p>The middle value when data are arranged in order. For even-sized datasets, it's the average of the two middle values.</p>
+                        </div>
+                        <div class="glossary-item" data-term="mode">
+                            <h4>Mode</h4>
+                            <p>The value(s) that occur most frequently in a dataset. A dataset may have one mode, multiple modes, or no mode.</p>
+                        </div>
+                        <div class="glossary-item" data-term="range">
+                            <h4>Range</h4>
+                            <p>The difference between the maximum and minimum values in a dataset.</p>
+                            <p class="formula">Range = max(x) - min(x)</p>
+                        </div>
+                        <div class="glossary-item" data-term="variance">
+                            <h4>Variance</h4>
+                            <p>A measure of data dispersion, calculated as the average of squared differences from the mean.</p>
+                            <p class="formula">σ² = Σ(x - x̄)² / n</p>
+                        </div>
+                        <div class="glossary-item" data-term="stdDev">
+                            <h4>Standard Deviation</h4>
+                            <p>The square root of variance, representing the average distance from the mean.</p>
+                            <p class="formula">σ = √σ²</p>
+                        </div>
+                        <div class="glossary-item" data-term="quartiles">
+                            <h4>Quartiles</h4>
+                            <p>Values that divide the data into quarters:</p>
+                            <ul>
+                                <li>Q1 (First quartile): 25th percentile</li>
+                                <li>Q2 (Second quartile): Median (50th percentile)</li>
+                                <li>Q3 (Third quartile): 75th percentile</li>
+                            </ul>
+                        </div>
+                        <div class="glossary-item" data-term="quartiles">
+                            <h4>IQR (Interquartile Range)</h4>
+                            <p>The range between the first and third quartiles, representing the middle 50% of data.</p>
+                            <p class="formula">IQR = Q3 - Q1</p>
+                        </div>
+                    </div>
+                    <div class="glossary-footer">
+                        <button id="hideGlossaryBtn" class="btn secondary">Hide Glossary</button>
+                    </div>
+                </div>
+                </div>
+
+                <div class="results-container" style="display: none;" id="resultsContainer">
+                    <div class="results-header">
+                        <h2>Results</h2>
+                        <button id="showStepsBtn" class="btn secondary">Show Calculation Steps</button>
+                    </div>
+
+                    <div class="result-cards" id="resultCards">
+                        <!-- Results will be displayed here -->
+                    </div>
+
+                    <div class="chart-container" style="margin-top: 2rem;">
+                        <canvas id="dataChart"></canvas>
+                    </div>
+
+                    <div class="steps-container" id="stepsContainer" style="display: none;">
+                        <h3>Calculation Steps</h3>
+                        <div id="calculationSteps">
+                            <!-- Steps will be displayed here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer></footer>
+
+    <script src="/components/script-file.js"></script>
+    <script src="/main.js"></script>
+    <script src="basic_stats.js"></script>
+</body>
+</html>

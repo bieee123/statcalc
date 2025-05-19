@@ -1,0 +1,490 @@
+    :root {
+    --primary-color: #4a6fa5;
+    --primary-light: #6a8cc9;
+    --primary-dark: #345284;
+    --accent-color: #ff9800;
+    --accent-light: #ffb74d;
+    --accent-dark: #f57c00;
+    --text-dark: #333;
+    --text-light: #f8f9fa;
+    --bg-light: #f8f9fa;
+    --bg-dark: #212529;
+    --gray-100: #f8f9fa;
+    --gray-200: #e9ecef;
+    --gray-300: #dee2e6;
+    --gray-400: #ced4da;
+    --gray-500: #adb5bd;
+    --gray-600: #6c757d;
+    --gray-700: #495057;
+    --gray-800: #343a40;
+    --gray-900: #212529;
+    --border-radius: 8px;
+    --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+    }
+
+    /* Global Styles */
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    }
+
+    body {
+    font-family: 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+    color: var(--text-dark);
+    line-height: 1.6;
+    background-color: var(--bg-light);
+}
+
+    a {
+    text-decoration: none;
+    color: var(--primary-color);
+    transition: var(--transition);
+    }
+
+    a:hover {
+    color: var(--primary-dark);
+    }
+
+    .container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    }
+
+    /* === Page Header === */
+    .page-header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    padding: 3rem 0;
+    margin-bottom: 2rem;
+    }
+    .page-header h1 {
+    color: white;
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+    }
+    .page-header p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    max-width: 600px;
+    }
+
+    /* Main Content */
+    .main-content {
+    padding: 2rem 0;
+    }
+
+    /* Card Design */
+    .card {
+    background-color: #fff;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    }
+
+    .card-header {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    padding: 1rem 1.5rem;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    }
+
+    .card-body {
+    padding: 1.5rem;
+    }
+
+    /* Form Elements */
+    .form-group {
+    margin-bottom: 1.2rem;
+    }
+
+    .form-row {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 -0.5rem;
+    }
+
+    .form-col {
+    flex: 1;
+    padding: 0 0.5rem;
+    min-width: 200px;
+    }
+
+    label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--gray-700);
+    }
+
+    .input-group {
+    display: flex;
+    align-items: center;
+    }
+
+    .input-group label {
+    margin-bottom: 0;
+    margin-right: 0.5rem;
+    }
+
+    .form-control {
+    width: 100%;
+    padding: 0.6rem 0.8rem;
+    border: 1px solid var(--gray-300);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    transition: var(--transition);
+    }
+
+    .form-control:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.1);
+    }
+
+    select.form-control {
+    cursor: pointer;
+    background-color: white;
+    }
+
+    /* Buttons */
+    .btn {
+    display: inline-block;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    padding: 0.7rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+    }
+
+    .btn:hover {
+    background-color: var(--primary-dark);
+    color: white;
+    }
+
+    .btn-outline {
+    background-color: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    }
+
+    .btn-outline:hover {
+    background-color: var(--primary-color);
+    color: white;
+    }
+
+    .btn-accent {
+    background-color: var(--accent-color);
+    }
+
+    .btn-accent:hover {
+    background-color: var(--accent-dark);
+    }
+
+    /* Toggle Switch */
+    .switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+    margin: 0 10px;
+    }
+
+    .switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    }
+
+    .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--gray-300);
+    transition: .4s;
+    border-radius: 24px;
+    }
+
+    .slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+    }
+
+    input:checked + .slider {
+    background-color: var(--primary-color);
+    }
+
+    input:focus + .slider {
+    box-shadow: 0 0 1px var(--primary-color);
+    }
+
+    input:checked + .slider:before {
+    transform: translateX(26px);
+    }
+
+    /* Results Section */
+    .result-section {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--gray-200);
+    }
+
+    .result-box {
+    background-color: var(--gray-100);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    }
+
+    .result-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    }
+
+    .result-explanation {
+    font-size: 0.95rem;
+    color: var(--gray-700);
+    }
+
+    /* Chart container */
+    .chart-container {
+    position: relative;
+    height: 300px;
+    margin: 1.5rem 0;
+    }
+
+    /* Tooltips */
+    .tooltip-icon {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background-color: var(--gray-500);
+    color: white;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 18px;
+    font-size: 12px;
+    margin-left: 5px;
+    cursor: help;
+    position: relative;
+    }
+
+    .tooltip-content {
+    position: absolute;
+    z-index: 10;
+    width: 200px;
+    background-color: var(--gray-800);
+    color: white;
+    padding: 10px;
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.3s;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .tooltip-icon:hover .tooltip-content {
+    visibility: visible;
+    opacity: 1;
+    }
+
+    .tooltip-content:after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: var(--gray-800) transparent transparent transparent;
+    }
+
+    /* Comparison section */
+    .comparison-section {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    background-color: rgba(74, 111, 165, 0.05);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+    }
+
+    .comparison-title {
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--primary-dark);
+    }
+
+    .comparison-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    }
+
+    .stat-card {
+    background: white;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    }
+
+    .stat-label {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    margin-bottom: 0.3rem;
+    }
+
+    .stat-value {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    }
+
+    /* Learning resources */
+    .learning-resources {
+    margin-top: 2rem;
+    }
+
+    .resource-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+    }
+
+    .resource-card {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    transition: var(--transition);
+    }
+
+    .resource-card:hover {
+    border-color: var(--primary-color);
+    transform: translateY(-2px);
+    }
+
+    .resource-title {
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+    }
+
+    .resource-source {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    }
+
+    /* Formula display */
+    .formula-display {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin: 1rem 0;
+    box-shadow: var(--box-shadow);
+    overflow-x: auto;
+    }
+
+    /* Media Queries */
+    @media (max-width: 992px) {
+    nav ul {
+        flex-wrap: wrap;
+    }
+    nav li {
+        margin-left: 1rem;
+    }
+    }
+
+    @media (max-width: 768px) {
+    .comparison-grid {
+        grid-template-columns: 1fr;
+    }
+    }
+
+    @media (max-width: 576px) {
+    header .container {
+        flex-direction: column;
+        text-align: center;
+    }
+    nav {
+        margin-top: 1rem;
+    }
+    nav ul {
+        justify-content: center;
+    }
+    nav li {
+        margin: 0 0.5rem;
+    }
+    }
+
+    /* Toggle buttons for chart display */
+    .chart-toggle {
+    display: flex;
+    justify-content: center;
+    margin: 1rem 0;
+    }
+
+    .chart-toggle button {
+    background-color: var(--gray-200);
+    border: none;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: var(--transition);
+    }
+
+    .chart-toggle button:first-child {
+    border-radius: var(--border-radius) 0 0 var(--border-radius);
+    }
+
+    .chart-toggle button:last-child {
+    border-radius: 0 var(--border-radius) var(--border-radius) 0;
+    }
+
+    .chart-toggle button.active {
+    background-color: var(--primary-color);
+    color: white;
+    }
+
+    .calculation-steps {
+    background-color: var(--gray-100);
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+    padding: 1rem;
+    margin: 1rem 0;
+    font-size: 0.95rem;
+    }
+
+    /* Make the math formulas look better */
+    .katex-display {
+    overflow-x: auto;
+    overflow-y: hidden;
+    margin: 1rem 0;
+    }

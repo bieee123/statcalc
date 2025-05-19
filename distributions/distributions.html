@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StatCalc - Probability Distribution Calculator</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.8.0/math.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.2/es5/tex-mml-chtml.js"></script>
+    <link rel="stylesheet" href="/distributions/distributions.css">
+    <link rel="stylesheet" href="/components/styles-file.css">
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [[', '], ['\\(', '\\)']],
+                displayMath: [['$', '$'], ['\\[', '\\]']],
+                processEscapes: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre']
+            }
+        };
+    </script>
+</head>
+<body>
+    <header></header>
+
+    <section class="page-header">
+        <div class="container">
+            <h1>Probability Distribution Calculator</h1>
+            <p>Calculate, visualize, and compare different probability distributions to understand their properties and applications.</p>
+        </div>
+    </section>
+
+    <div class="container main-content">
+        <div class="card">
+            <div class="card-header">
+                <h2>Distribution Calculator</h2>
+            </div>
+            <div class="card-body">
+                <div class="form-row">
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="mainDistribution">Main Distribution</label>
+                            <select id="mainDistribution" class="form-control">
+                                <option value="binomial">Binomial Distribution</option>
+                                <option value="poisson">Poisson Distribution</option>
+                                <option value="normal">Normal Distribution</option>
+                                <option value="exponential">Exponential Distribution</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-col">
+                        <div class="form-group">
+                            <label for="compareSwitch">Compare with another distribution</label>
+                            <div class="input-group">
+                                <label class="switch">
+                                    <input type="checkbox" id="compareSwitch">
+                                    <span class="slider"></span>
+                                </label>
+                                <span id="compareSwitchLabel">No</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-col" id="compareDistCol" style="display: none;">
+                        <div class="form-group">
+                            <label for="compareDistribution">Comparison Distribution</label>
+                            <select id="compareDistribution" class="form-control">
+                                <option value="binomial">Binomial Distribution</option>
+                                <option value="poisson">Poisson Distribution</option>
+                                <option value="normal">Normal Distribution</option>
+                                <option value="exponential">Exponential Distribution</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parameters for Main Distribution -->
+                <div id="mainParameters">
+                    <!-- Binomial Parameters (default) -->
+                    <div id="binomialParams" class="distribution-params">
+                        <h3>Binomial Distribution Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="binomial-n">
+                                        Number of trials (n)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Number of independent Bernoulli trials</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="binomial-n" class="form-control" min="1" value="10">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="binomial-p">
+                                        Probability of success (p)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Probability of success on a single trial</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="binomial-p" class="form-control" min="0" max="1" step="0.01" value="0.5">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="binomial-x">
+                                        Number of successes (x)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Value for which to calculate probability</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="binomial-x" class="form-control" min="0" value="5">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Poisson Parameters -->
+                    <div id="poissonParams" class="distribution-params" style="display: none;">
+                        <h3>Poisson Distribution Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="poisson-lambda">
+                                        Rate parameter (λ)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Average rate of occurrences in the given interval</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="poisson-lambda" class="form-control" min="0" step="0.1" value="3">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="poisson-x">
+                                        Number of occurrences (x)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Value for which to calculate probability</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="poisson-x" class="form-control" min="0" value="3">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Normal Parameters -->
+                    <div id="normalParams" class="distribution-params" style="display: none;">
+                        <h3>Normal Distribution Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="normal-mean">
+                                        Mean (μ)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Center of the distribution</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="normal-mean" class="form-control" step="0.1" value="0">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="normal-sd">
+                                        Standard Deviation (σ)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Spread of the distribution</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="normal-sd" class="form-control" min="0.1" step="0.1" value="1">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="normal-x">
+                                        Value (x)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Value for which to calculate probability</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="normal-x" class="form-control" step="0.1" value="0">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exponential Parameters -->
+                    <div id="exponentialParams" class="distribution-params" style="display: none;">
+                        <h3>Exponential Distribution Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="exponential-lambda">
+                                        Rate parameter (λ)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Rate parameter of the distribution (1/mean)</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="exponential-lambda" class="form-control" min="0.01" step="0.1" value="1">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="exponential-x">
+                                        Value (x)
+                                        <span class="tooltip-icon">i
+                                            <span class="tooltip-content">Value for which to calculate probability</span>
+                                        </span>
+                                    </label>
+                                    <input type="number" id="exponential-x" class="form-control" min="0" step="0.1" value="1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parameters for Comparison Distribution -->
+                <div id="comparisonParameters" style="display: none;">
+                    <!-- Binomial Comparison Parameters -->
+                    <div id="binomialCompareParams" class="distribution-params">
+                        <h3>Binomial Comparison Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="binomial-compare-n">Number of trials (n)</label>
+                                    <input type="number" id="binomial-compare-n" class="form-control" min="1" value="15">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="binomial-compare-p">Probability of success (p)</label>
+                                    <input type="number" id="binomial-compare-p" class="form-control" min="0" max="1" step="0.01" value="0.4">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="binomial-compare-x">Number of successes (x)</label>
+                                    <input type="number" id="binomial-compare-x" class="form-control" min="0" value="6">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Poisson Comparison Parameters -->
+                    <div id="poissonCompareParams" class="distribution-params" style="display: none;">
+                        <h3>Poisson Comparison Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="poisson-compare-lambda">Rate parameter (λ)</label>
+                                    <input type="number" id="poisson-compare-lambda" class="form-control" min="0" step="0.1" value="5">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="poisson-compare-x">Number of occurrences (x)</label>
+                                    <input type="number" id="poisson-compare-x" class="form-control" min="0" value="5">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Normal Comparison Parameters -->
+                    <div id="normalCompareParams" class="distribution-params" style="display: none;">
+                        <h3>Normal Comparison Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="normal-compare-mean">Mean (μ)</label>
+                                    <input type="number" id="normal-compare-mean" class="form-control" step="0.1" value="2">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="normal-compare-sd">Standard Deviation (σ)</label>
+                                    <input type="number" id="normal-compare-sd" class="form-control" min="0.1" step="0.1" value="1.5">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="normal-compare-x">Value (x)</label>
+                                    <input type="number" id="normal-compare-x" class="form-control" step="0.1" value="2">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Exponential Comparison Parameters -->
+                    <div id="exponentialCompareParams" class="distribution-params" style="display: none;">
+                        <h3>Exponential Comparison Parameters</h3>
+                        <div class="form-row">
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="exponential-compare-lambda">Rate parameter (λ)</label>
+                                    <input type="number" id="exponential-compare-lambda" class="form-control" min="0.01" step="0.1" value="0.5">
+                                </div>
+                            </div>
+                            <div class="form-col">
+                                <div class="form-group">
+                                    <label for="exponential-compare-x">Value (x)</label>
+                                    <input type="number" id="exponential-compare-x" class="form-control" min="0" step="0.1" value="1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button id="calculateBtn" class="btn">Calculate Probabilities</button>
+                </div>
+
+                <!-- Result Section -->
+                <div id="results" class="result-section" style="display: none;">
+                    <h3>Results</h3>
+                    <div class="form-row">
+                        <div class="form-col">
+                            <div class="result-box">
+                                <h4>PDF/PMF Value</h4>
+                                <div id="pdfResult" class="result-value">-</div>
+                                <div class="result-explanation">The probability density/mass function value at x</div>
+                            </div>
+                        </div>
+                        <div class="form-col">
+                            <div class="result-box">
+                                <h4>CDF Value</h4>
+                                <div id="cdfResult" class="result-value">-</div>
+                                <div class="result-explanation">The cumulative distribution function value at x</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Formula Display -->
+                    <div class="formula-display">
+                        <h4>Formula Used:</h4>
+                        <div id="formula"></div>
+                    </div>
+
+                    <!-- Calculation Steps -->
+                    <div class="calculation-steps">
+                        <h4>Calculation Steps:</h4>
+                        <div id="calculationSteps"></div>
+                    </div>
+
+                    <!-- Chart Toggle -->
+                    <div class="chart-toggle">
+                        <button id="pdfToggle" class="active">PDF/PMF</button>
+                        <button id="cdfToggle">CDF</button>
+                        <button id="bothToggle">Both</button>
+                    </div>
+
+                    <!-- Chart Display -->
+                    <div class="chart-container">
+                        <canvas id="distributionChart"></canvas>
+                    </div>
+
+                    <!-- Comparison Section (shown when comparison is active) -->
+                    <div id="comparisonSection" class="comparison-section" style="display: none;">
+                        <h3 class="comparison-title">Distribution Comparison</h3>
+                        <div class="comparison-grid">
+                            <div class="stat-card">
+                                <div class="stat-label">Mean (Main Distribution)</div>
+                                <div id="mean1" class="stat-value">-</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Mean (Comparison Distribution)</div>
+                                <div id="mean2" class="stat-value">-</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Variance (Main Distribution)</div>
+                                <div id="variance1" class="stat-value">-</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-label">Variance (Comparison Distribution)</div>
+                                <div id="variance2" class="stat-value">-</div>
+                            </div>
+                        </div>
+                        <div id="comparisonInsight" class="result-explanation" style="margin-top: 1rem;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Resources -->
+        <div class="learning-resources">
+            <h3>Learn More About Probability Distributions</h3>
+            <div class="resource-cards">
+                <a href="https://www.khanacademy.org/math/statistics-probability/random-variables-stats-library" target="_blank" class="resource-card">
+                    <div class="resource-title">Random Variables and Probability Distributions</div>
+                    <div class="resource-source">Khan Academy</div>
+                </a>
+                <a href="https://en.wikipedia.org/wiki/Probability_distribution" target="_blank" class="resource-card">
+                    <div class="resource-title">Probability Distribution</div>
+                    <div class="resource-source">Wikipedia</div>
+                </a>
+                <a href="https://www.mathsisfun.com/data/standard-normal-distribution.html" target="_blank" class="resource-card">
+                    <div class="resource-title">Normal Distribution</div>
+                    <div class="resource-source">Maths is Fun</div>
+                </a>
+                <a href="https://www.youtube.com/playlist?list=PLvxOuBpazmsOGOursPoofaHyz_1NpxbhA" target="_blank" class="resource-card">
+                    <div class="resource-title">Probability Distributions Video Lectures</div>
+                    <div class="resource-source">YouTube</div>
+                </a>
+            </div>
+        </div>
+    </div>
+    <footer></footer>
+
+    <script src="/components/script-file.js"></script>
+    <script src="distributions.js"></script>
+</body>
+</html>
