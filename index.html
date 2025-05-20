@@ -91,6 +91,48 @@
         </section>
     </main>
 
+    <div id="chatbot-popup" class="chatbot-popup">
+            <div class="chatbot-header">
+                <div class="chatbot-logo">
+                    <i class="fa-solid fa-calculator"></i>
+                </div>
+                <span class="chatbot-title">StatCalc Assistant</span>
+                <button id="close-chatbot" class="close-btn">✖</button>
+            </div>
+    
+            <div class="chatbot-info">
+                <span class="version">StatCalc Assistant v1.0</span>
+                <p>
+                    Ask questions about statistical calculations or how to use StatCalc features.
+                </p>
+                <a href="#" class="info-link">Learn more</a>
+            </div>
+    
+            <div class="chatbot-body">
+                <div class="chat-message chatbot">
+                    <div class="chat-avatar">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="chat-bubble">
+                        Hi there! I'm your StatCalc Assistant. How can I help you with your statistical calculations today?
+                    </div>
+                </div>
+                <div class="quick-replies">
+                    <button class="quick-reply">How to calculate mean?</button>
+                    <button class="quick-reply">Normal distribution help</button>
+                    <button class="quick-reply">T-test vs Z-test</button>
+                </div>
+            </div>
+    
+            <div class="chatbot-footer">
+                <input type="text" id="chat-input" placeholder="Type your question about statistics...">
+                <button id="send-message">
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
     <footer id="footer-container"></footer>
 
     <script src="./components/script-file.js"></script>
