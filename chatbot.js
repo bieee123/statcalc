@@ -65,17 +65,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     // Bot avatar for chatbot messages
                     const avatarDiv = document.createElement("div");
                     avatarDiv.className = "chat-avatar";
-                    const avatarIcon = document.createElement("i");
-                    avatarIcon.className = "fa-solid fa-robot";
-                    avatarDiv.appendChild(avatarIcon);
-                    messageDiv.appendChild(avatarDiv);
-                } else {
-                    // User avatar for user messages (added after bubble due to flex-direction)
-                    const avatarDiv = document.createElement("div");
-                    avatarDiv.className = "chat-avatar";
-                    const avatarIcon = document.createElement("i");
-                    avatarIcon.className = "fa-solid fa-user";
-                    avatarDiv.appendChild(avatarIcon);
+                    const avatarImg = document.createElement("img");
+                    avatarImg.src = "/api/placeholder/35/35";
+                    avatarImg.alt = "Bot Avatar";
+                    avatarDiv.appendChild(avatarImg);
                     messageDiv.appendChild(avatarDiv);
                 }
                 
