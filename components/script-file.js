@@ -52,22 +52,15 @@ document.addEventListener('DOMContentLoaded', function() {
 function getPathPrefix() {
     const currentPath = window.location.pathname;
     
-    // For the root page (index.html)
-    if (currentPath.endsWith('/') || currentPath.endsWith('index.html')) {
+    // Check if we're at the root (ends with / or contains index.html)
+    if (currentPath.endsWith('/') || 
+        currentPath.endsWith('index.html') || 
+        currentPath.split('/').filter(Boolean).length === 0) {
         return './';
     }
     
     // For pages in subdirectories (one level deep)
-    if (currentPath.includes('/')) {
-        // Count the number of directory levels by counting slashes
-        const parts = currentPath.split('/').filter(Boolean);
-        if (parts.length >= 1) {
-            return '../';
-        }
-    }
-    
-    // Default fallback
-    return './';
+    return '../';
 }
 
 /**
@@ -75,22 +68,27 @@ function getPathPrefix() {
  */
 function updateNavigationLinks(container, pathPrefix) {
     const allLinks = container.querySelectorAll('a');
+    
     allLinks.forEach(link => {
         const href = link.getAttribute('href');
         
         if (!href) return; // Skip if no href
         
-        if (href.startsWith('/')) {
-            // Remove the leading slash to make relative to root
-            link.setAttribute('href', pathPrefix + href.substring(1));
+        // Don't modify external links, anchors, or mailto links
+        if (href.startsWith('http') || href.startsWith('#') || href.startsWith('mailto:')) {
+            return;
         }
-        else if (!href.startsWith('http') && !href.startsWith('#') && !href.startsWith('mailto:')) {
-            // For relative links that don't have pathPrefix already
-            // Don't adjust links that are already properly prefixed, or are absolute URLs, 
-            // anchors, or mailto links
-            if (!href.startsWith(pathPrefix) && !href.startsWith('./') && !href.startsWith('../')) {
-                link.setAttribute('href', pathPrefix + href);
-            }
+        
+        // Handle links that start with a leading slash (absolute from site root)
+        if (href.startsWith('/')) {
+            // Remove the leading slash to make relative to current path prefix
+            link.setAttribute('href', pathPrefix + href.substring(1));
+            return;
+        }
+        
+        // Handle links that don't already have the correct path prefix
+        if (!href.startsWith(pathPrefix) && !href.startsWith('./') && !href.startsWith('../')) {
+            link.setAttribute('href', pathPrefix + href);
         }
     });
 }
@@ -117,7 +115,7 @@ function setActiveLink() {
     const currentPath = window.location.pathname;
     
     // Extract the page name from the path
-    let pageName = currentPath.split('/').pop(); // Get the file name
+    let pageName = currentPath.split('/').pop() || 'index.html'; // Get the file name
     
     // If the path ends with /, assume it's the index page
     if (currentPath.endsWith('/') || pageName === '') {
@@ -125,7 +123,8 @@ function setActiveLink() {
     }
     
     // Also check for the directory name for section pages
-    const dirName = currentPath.split('/').filter(Boolean).slice(-2, -1)[0] || '';
+    const pathParts = currentPath.split('/').filter(Boolean);
+    const dirName = pathParts.length > 1 ? pathParts[pathParts.length - 2] : '';
     
     // Find and mark active links in desktop and mobile navigation
     markActiveLinks(document.querySelectorAll('.desktop-nav a'), pageName, dirName);
@@ -139,14 +138,14 @@ function markActiveLinks(links, pageName, dirName) {
     links.forEach(link => {
         const href = link.getAttribute('href') || '';
         
-        // Clean the href for comparison
+        // Clean the href for comparison by removing path prefixes
         const cleanHref = href.replace(/^\.\.\/|^\.\/|^\//g, '');
         
         // Check if link points to current page
         const isActive = 
             cleanHref.endsWith(pageName) || 
-            (pageName === 'index.html' && cleanHref === '') ||
-            cleanHref.includes(dirName + '/');
+            (pageName === 'index.html' && (cleanHref === '' || cleanHref === 'index.html')) ||
+            (dirName && cleanHref.startsWith(dirName + '/'));
         
         if (isActive) {
             link.classList.add('active');
