@@ -136,6 +136,7 @@
         }
 
         .info-link {
+            margin-top: auto;
             color: var(--primary-color);
             text-decoration: none;
         }
