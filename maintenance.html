@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StatCalc - Under Maintenance</title>
+    <style>
+        :root {
+            --primary-color: #4a6fa5;
+            --primary-light: #6a8cc9;
+            --primary-dark: #345284;
+            --accent-color: #ff9800;
+            --accent-light: #ffb74d;
+            --accent-dark: #f57c00;
+            --text-dark: #333;
+            --text-light: #f8f9fa;
+            --bg-light: #f8f9fa;
+            --bg-dark: #212529;
+            --gray-100: #f8f9fa;
+            --gray-200: #e9ecef;
+            --gray-300: #dee2e6;
+            --gray-400: #ced4da;
+            --gray-500: #adb5bd;
+            --gray-600: #6c757d;
+            --gray-700: #495057;
+            --gray-800: #343a40;
+            --gray-900: #212529;
+            --border-radius: 8px;
+            --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .maintenance-container {
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+            background-color: white;
+            padding: 3rem 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .logo {
+            margin-bottom: 1.5rem;
+        }
+
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-weight: bold;
+        }
+
+        .icon-container {
+            margin: 2rem 0;
+        }
+
+        .maintenance-icon {
+            width: 150px;
+            height: 150px;
+            fill: var(--primary-color);
+        }
+
+        h2 {
+            color: var(--primary-dark);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        p {
+            color: var(--gray-700);
+            font-size: 1.1rem;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .progress-container {
+            margin: 2rem 0;
+            background-color: var(--gray-200);
+            height: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 65%;
+            background: linear-gradient(to right, var(--primary-light), var(--primary-color));
+            animation: progressAnimation 2s ease-in-out infinite alternate;
+        }
+
+        .contact-info {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--gray-300);
+        }
+
+        .email {
+            color: var(--primary-color);
+            font-weight: 500;
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .email:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        .return-btn {
+            display: inline-block;
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            background-color: var(--primary-color);
+            color: var(--text-light);
+            text-decoration: none;
+            border-radius: var(--border-radius);
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .return-btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            margin-top: 3rem;
+            color: var(--gray-600);
+            font-size: 0.9rem;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes progressAnimation {
+            from {
+                width: 55%;
+            }
+            to {
+                width: 75%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .maintenance-container {
+                padding: 2rem 1rem;
+            }
+            
+            .logo h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            p {
+                font-size: 1rem;
+            }
+            
+            .maintenance-icon {
+                width: 120px;
+                height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="maintenance-container">
+        <div class="logo">
+            <h1>StatCalc</h1>
+        </div>
+
+        <div class="icon-container">
+            <svg class="maintenance-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M21.67,18.17,16.3,12.81A6.35,6.35,0,0,0,16.9,10a7,7,0,1,0-7,7,6.34,6.34,0,0,0,2.81-.6l5.36,5.36a1,1,0,1,0,1.42-1.42ZM13.9,10A5,5,0,1,1,10,5,5,5,0,0,1,13.9,10Z"/>
+                <path d="M11,9H9a1,1,0,0,0,0,2h2a1,1,0,0,0,0-2Z"/>
+                <path d="M19.5,19.5a1.5,1.5,0,0,1-1.5,1.5H6a1.5,1.5,0,0,1-1.5-1.5V4.5A1.5,1.5,0,0,1,6,3H9.59a1.5,1.5,0,0,1,1.06.44l1.91,1.91A1.5,1.5,0,0,1,13,6.41V7.25"/>
+            </svg>
+        </div>
+
+        <h2>We're Currently Improving Our Website</h2>
+        <p>Our team is working hard to enhance your statistical computing experience. StatCalc is temporarily unavailable while we implement important updates and new features.</p>
+        
+        <div class="progress-container">
+            <div class="progress-bar"></div>
+        </div>
+        
+        <p>We expect to be back online shortly. Thank you for your patience and understanding!</p>
+        
+        <div class="contact-info">
+            <p>If you have any questions or need assistance, please contact us at <a href="mailto:support@statcalc.com" class="email">support@statcalc.com</a></p>
+            <a href="#" class="return-btn">Check Status Updates</a>
+        </div>
+        
+        <div class="footer">
+            <p>&copy; 2025 StatCalc. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
