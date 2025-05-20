@@ -165,11 +165,11 @@
 
         /* Avatar Bot */
         .chat-avatar {
-            width: 40px; /* Ukuran avatar */
-            height: 40px; /* Harus sama dengan width untuk bulat sempurna */
-            border-radius: 50%; /* Membuat gambar menjadi bulat */
-            object-fit: cover; /* Memastikan gambar tidak terdistorsi */
-            margin-right: 10px; /* Beri jarak dengan chat bubble */
+            width: 40px; 
+            height: 40px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            margin-right: 10px; 
             display: flex;
             align-items: center;
             justify-content: center;
