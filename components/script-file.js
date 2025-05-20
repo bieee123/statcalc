@@ -5,10 +5,16 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Determine the correct path prefix based on the current location
     const pathPrefix = getPathPrefix();
+    console.log('Current path prefix:', pathPrefix); // Debug log
     
     // Load header
     fetch(pathPrefix + 'components/header-file.html')
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to load header: ${response.status} ${response.statusText}`);
+            }
+            return response.text();
+        })
         .then(data => {
             if (headerContainer) {
                 headerContainer.innerHTML = data;
@@ -27,7 +33,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load footer
     fetch(pathPrefix + 'components/footer-file.html')
-        .then(response => response.text())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to load footer: ${response.status} ${response.statusText}`);
+            }
+            return response.text();
+        })
         .then(data => {
             if (footerContainer) {
                 footerContainer.innerHTML = data;
@@ -41,16 +52,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
 /**
  * Determines the correct path prefix based on the current location
- * This handles all specified file paths:
- * - index.html (root)
- * - basic-stats/basic_stats.html
- * - distributions/distributions.html
- * - inference/inference.html
- * - visualization/charts.html
- * - documentation/documentation.html
+ * This handles all navigational paths properly
  */
 function getPathPrefix() {
     const currentPath = window.location.pathname;
+    console.log('Current path:', currentPath); // Debug log
     
     // Check if we're at the root (ends with / or contains index.html)
     if (currentPath.endsWith('/') || 
@@ -79,17 +85,19 @@ function updateNavigationLinks(container, pathPrefix) {
             return;
         }
         
-        // Handle links that start with a leading slash (absolute from site root)
-        if (href.startsWith('/')) {
-            // Remove the leading slash to make relative to current path prefix
-            link.setAttribute('href', pathPrefix + href.substring(1));
+        // Step 1: Normalize the path by removing any existing ./ or ../ or leading /
+        let normalizedHref = href;
+        normalizedHref = normalizedHref.replace(/^\.\//g, ''); // Remove leading ./
+        normalizedHref = normalizedHref.replace(/^\//g, '');   // Remove leading /
+        
+        // Don't modify paths that already have ../ if we're in a subdirectory
+        if (pathPrefix === '../' && href.startsWith('../')) {
             return;
         }
         
-        // Handle links that don't already have the correct path prefix
-        if (!href.startsWith(pathPrefix) && !href.startsWith('./') && !href.startsWith('../')) {
-            link.setAttribute('href', pathPrefix + href);
-        }
+        // Step 2: Add the correct prefix
+        link.setAttribute('href', pathPrefix + normalizedHref);
+        console.log(`Updated link: ${href} -> ${pathPrefix + normalizedHref}`); // Debug log
     });
 }
 
