@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function() {
               const avatarDiv = document.createElement("div");
               avatarDiv.className = "chat-avatar";
               const avatarImg = document.createElement("img");
-              avatarImg.src = "/api/placeholder/35/35";
+              avatarImg.src = "assets/images/chatbot.jpg";
               avatarImg.alt = "Bot Avatar";
               avatarDiv.appendChild(avatarImg);
               messageDiv.appendChild(avatarDiv);
